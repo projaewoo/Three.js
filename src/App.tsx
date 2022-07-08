@@ -1,10 +1,11 @@
 import React from 'react';
 import Cube from "./contents/components/cube";
+import Cube2 from "./contents/components/cube2";
 
 function App() {
   return (
     <div>
-        <Cube/>
+        <Cube2/>
     </div>
   );
 }
