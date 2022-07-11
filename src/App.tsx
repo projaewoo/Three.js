@@ -1,11 +1,11 @@
 import React from 'react';
 import Cube from "./contents/components/cube";
-import Cube2 from "./contents/components/cube2";
+import Ninja from "./contents/components/Ninja";
 
 function App() {
   return (
     <div>
-        <Cube2/>
+        <Ninja/>
     </div>
   );
 }
