@@ -1,10 +1,10 @@
 import React from 'react';
-import LionBox from "./contents/components/lionBox";
+import TigerCandle from "./contents/components/tigerCandle";
 
 function App() {
   return (
     <div>
-        <LionBox/>
+        <TigerCandle/>
     </div>
   );
 }

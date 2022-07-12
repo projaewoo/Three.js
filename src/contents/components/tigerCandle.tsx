@@ -4,7 +4,7 @@ import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
 import WEBGL from "three/examples/jsm/capabilities/WebGL";
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
 
-const DragonKettle = () => {
+const TigerCandle = () => {
 
     let scene = new THREE.Scene();
     let light;
@@ -71,13 +71,13 @@ const DragonKettle = () => {
     const loadObjLoader = () => {
         loader = new OBJLoader();
         const textureLoader = new THREE.TextureLoader();
-        const material = new THREE.MeshLambertMaterial({ map: textureLoader.load(`${process.env.PUBLIC_URL}/NT_NO061/Textures/T_NT_NO061_AO.png`) });
-        const material2 = new THREE.MeshLambertMaterial({ map: textureLoader.load(`${process.env.PUBLIC_URL}/NT_NO061/Textures/T_NT_NO061_D.png`) });
-        const material3 = new THREE.MeshLambertMaterial({ map: textureLoader.load(`${process.env.PUBLIC_URL}/NT_NO061/Textures/T_NT_NO061_M.png`) });
-        const material4 = new THREE.MeshLambertMaterial({ map: textureLoader.load(`${process.env.PUBLIC_URL}/NT_NO061/Textures/T_NT_NO061_N.png`) });
-        const material5 = new THREE.MeshLambertMaterial({ map: textureLoader.load(`${process.env.PUBLIC_URL}/NT_NO061/Textures/T_NT_NO061_R.png`) });
+        const material = new THREE.MeshLambertMaterial({ map: textureLoader.load(`${process.env.PUBLIC_URL}/NT_NO060/Textures/T_NT_NO060_albedo.jpg`) });
+        const material2 = new THREE.MeshLambertMaterial({ map: textureLoader.load(`${process.env.PUBLIC_URL}/NT_NO060/Textures/T_NT_NO060_AO.jpg`) });
+        const material3 = new THREE.MeshLambertMaterial({ map: textureLoader.load(`${process.env.PUBLIC_URL}/NT_NO060/Textures/T_NT_NO060_metallic.jpg`) });
+        const material4 = new THREE.MeshLambertMaterial({ map: textureLoader.load(`${process.env.PUBLIC_URL}/NT_NO060/Textures/T_NT_NO060_normal.jpg`) });
+        const material5 = new THREE.MeshLambertMaterial({ map: textureLoader.load(`${process.env.PUBLIC_URL}/NT_NO060/Textures/T_NT_NO060_roughness.jpg`) });
 
-        loader.load(`${process.env.PUBLIC_URL}/NT_NO061/NT_NO061.obj`, (obj: any) => {
+        loader.load(`${process.env.PUBLIC_URL}/NT_NO060/NT_NO060.obj`, (obj: any) => {
             // version 1.0
             // const texture = new THREE.TextureLoader().load(`${process.env.PUBLIC_URL}/NT_NO061/Textures/T_NT_NO061_AO.png`);
             // obj.traverse(child => {
@@ -126,4 +126,4 @@ const DragonKettle = () => {
     );
 }
 
-export default DragonKettle;
+export default TigerCandle;
