@@ -1,14 +1,10 @@
 import React from 'react';
-import Cube from "./contents/components/cube";
-import Ninja from "./contents/components/Ninja";
-import LibertyStatue from "./contents/components/libertyStatue";
-import DragonKettle from "./contents/components/dragonKettle";
+import LionBox from "./contents/components/lionBox";
 
 function App() {
   return (
     <div>
-        {/*<Ninja/>*/}
-        <DragonKettle/>
+        <LionBox/>
     </div>
   );
 }

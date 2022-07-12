@@ -2,9 +2,8 @@ import React, {useEffect} from 'react';
 import * as THREE from 'three';
 import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
 import WEBGL from "three/examples/jsm/capabilities/WebGL";
-import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
 
-const DragonKettle = () => {
+const LionBox = () => {
 
     let scene = new THREE.Scene();
     let light;
@@ -15,7 +14,7 @@ const DragonKettle = () => {
     useEffect(() => {
         initThree();
         addDirectionLight();
-        loadObjLoader();
+        loadLionBox();
     }, [])
 
     const initThree = () => {
@@ -68,53 +67,20 @@ const DragonKettle = () => {
         scene.add(light);
     }
 
-    const loadObjLoader = () => {
-        loader = new OBJLoader();
-        loader.load(`${process.env.PUBLIC_URL}/NT_NO061/NT_NO061.obj`, obj => {
-            // version 1.0
-            scene.add(obj);
-
-            // version 1.1
-            // defined Mesh and obj
-            // const textureCube = new THREE.CubeTextureLoader()
-            //   .setPath(`${process.env.PUBLIC_URL}/NT_NO061/Textures/`)
-            //   .load(['T_NT_NO061_AO.png', 'T_NT_NO061_D .png', 'T_NT_NO061_M .png', 'T_NT_NO061_N.png', 'T_NT_NO061_R.png']);
-            // textureCube.mapping = THREE.CubeRefractionMapping;
-            //
-            // const geometry = new THREE.SphereGeometry(100, 32, 16);
-            // const material = new THREE.MeshBasicMaterial({ color: 0xffffff, map: textureCube, refractionRatio: 0.95 });
-            // const mesh = new THREE.Mesh(geometry, material);
-            // scene.add(mesh);
-
-            // version 1.2
-            const planSize = 40;
-            const loader = new THREE.TextureLoader();
-            const texture = loader.load('https://r105.threejsfundamentals.org/threejs/resources/images/checker.png');
-            texture.wrapS = THREE.RepeatWrapping;
-            texture.wrapT = THREE.RepeatWrapping;
-            texture.magFilter = THREE.NearestFilter;
-            const repeats = planSize / 2;
-            texture.repeat.set(repeats, repeats);
-
-            const planeGeo = new THREE.PlaneBufferGeometry(planSize, planSize);
-            const planeMat = new THREE.MeshPhongMaterial({
-                map: texture,
-                side: THREE.DoubleSide,
-            });
-
-            const mesh = new THREE.Mesh(planeGeo, planeMat);
-            mesh.rotation.x = Math.PI * -0.5;
-            scene.add(mesh);
-        }, xhr => {
-            console.log(xhr.loaded / xhr.total * 100, '% loaded');
-        }, error => {
-            alert(error)
+    const loadLionBox = () => {
+        const geometry = new THREE.BoxGeometry(1, 1, 1);
+        const textureLoader = new THREE.TextureLoader();
+        const material = new THREE.MeshBasicMaterial({
+            map: textureLoader.load('https://r105.threejsfundamentals.org/threejs/resources/images/wall.jpg'),
         })
+        const cube = new THREE.Mesh(geometry, material);
+        scene.add(cube);
     }
+
 
     return (
       <></>
-    );
+    )
 }
 
-export default DragonKettle;
+export default LionBox
