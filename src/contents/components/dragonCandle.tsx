@@ -4,14 +4,12 @@ import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
 import WEBGL from "three/examples/jsm/capabilities/WebGL";
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
 
-const DragonKettle = () => {
-
+const DragonCandle = () => {
     let scene = new THREE.Scene();
     let light;
     let camera: any;
     let loader;       // OBJLoader 객체를 넣을 변수를 선언.
     let controls: any;
-    let renderer = new THREE.WebGLRenderer({ antialias: true });
 
     useEffect(() => {
         initThree();
@@ -26,8 +24,9 @@ const DragonKettle = () => {
             console.log('이 브라우저는 WEBGL을 지원하지 않습니다.')
         }
 
-        camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera = new THREE.PerspectiveCamera(10, window.innerWidth / window.innerHeight, 0.1, 1000);
 
+        let renderer = new THREE.WebGLRenderer({ antialias: true });
         // antialias:  true = 컴퓨터 그래픽에서 해상도의 한계로 선 등이 우둘투둘하지 않게
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.shadowMap.enabled = true;
@@ -71,27 +70,18 @@ const DragonKettle = () => {
     const loadObjLoader = () => {
         loader = new OBJLoader();
         const textureLoader = new THREE.TextureLoader();
-        const material = new THREE.MeshLambertMaterial({ map: textureLoader.load(`${process.env.PUBLIC_URL}/NT_NO061/Textures/T_NT_NO061_AO.png`) });
-        const material2 = new THREE.MeshLambertMaterial({ map: textureLoader.load(`${process.env.PUBLIC_URL}/NT_NO061/Textures/T_NT_NO061_D.png`) });
-        const material3 = new THREE.MeshLambertMaterial({ map: textureLoader.load(`${process.env.PUBLIC_URL}/NT_NO061/Textures/T_NT_NO061_M.png`) });
-        const material4 = new THREE.MeshLambertMaterial({ map: textureLoader.load(`${process.env.PUBLIC_URL}/NT_NO061/Textures/T_NT_NO061_N.png`) });
-        const material5 = new THREE.MeshLambertMaterial({ map: textureLoader.load(`${process.env.PUBLIC_URL}/NT_NO061/Textures/T_NT_NO061_R.png`) });
+        const material = new THREE.MeshLambertMaterial({ map: textureLoader.load(`${process.env.PUBLIC_URL}/NT_NO065/Textures/T_NT_NO065_AO.png`) });
+        const material2 = new THREE.MeshLambertMaterial({ map: textureLoader.load(`${process.env.PUBLIC_URL}/NT_NO065/Textures/T_NT_NO065_D.png`) });
+        const material3 = new THREE.MeshLambertMaterial({ map: textureLoader.load(`${process.env.PUBLIC_URL}/NT_NO065/Textures/T_NT_NO065_M.png`) });
+        const material4 = new THREE.MeshLambertMaterial({ map: textureLoader.load(`${process.env.PUBLIC_URL}/NT_NO065/Textures/T_NT_NO065_N.png`) });
+        const material5 = new THREE.MeshLambertMaterial({ map: textureLoader.load(`${process.env.PUBLIC_URL}/NT_NO065/Textures/T_NT_NO065_R.png`) });
 
-        loader.load(`${process.env.PUBLIC_URL}/NT_NO061/NT_NO061.obj`, (obj: any) => {
-            // version 1.0
-            // const texture = new THREE.TextureLoader().load(`${process.env.PUBLIC_URL}/NT_NO061/Textures/T_NT_NO061_AO.png`);
-            // obj.traverse(child => {
-            //     if (child instanceof THREE.Mesh) {
-            //         child.material.map = texture;
-            //     }
-            // })
-
-            // version 1.1
+        loader.load(`${process.env.PUBLIC_URL}/NT_NO065/NT_NO065.obj`, (obj: any) => {
             const geometry = obj.children[0].geometry;
             const materials = [material, material2, material3, material4, material5];
             geometry.addGroup(0, geometry.getAttribute('position').count / 2, 0);
-            geometry.addGroup(geometry.getAttribute("position").count / 2,
-              geometry.getAttribute("position").count / 2,1);
+            geometry.addGroup(geometry.getAttribute("position").count/2,
+              geometry.getAttribute("position").count/2,1);
             obj = new THREE.Mesh(geometry, materials);
             obj.position.y = 0;
 
@@ -128,4 +118,4 @@ const DragonKettle = () => {
     );
 }
 
-export default DragonKettle;
+export default DragonCandle;

@@ -78,13 +78,6 @@ const TigerCandle = () => {
         const material5 = new THREE.MeshLambertMaterial({ map: textureLoader.load(`${process.env.PUBLIC_URL}/NT_NO060/Textures/T_NT_NO060_roughness.jpg`) });
 
         loader.load(`${process.env.PUBLIC_URL}/NT_NO060/NT_NO060.obj`, (obj: any) => {
-            // version 1.0
-            // const texture = new THREE.TextureLoader().load(`${process.env.PUBLIC_URL}/NT_NO061/Textures/T_NT_NO061_AO.png`);
-            // obj.traverse(child => {
-            //     if (child instanceof THREE.Mesh) {
-            //         child.material.map = texture;
-            //     }
-            // })
             const geometry = obj.children[0].geometry;
             const materials = [material, material2, material3, material4, material5];
             geometry.addGroup(0, geometry.getAttribute('position').count / 2, 0);

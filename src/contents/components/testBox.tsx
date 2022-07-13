@@ -2,22 +2,23 @@ import React, {useEffect} from 'react';
 import * as THREE from 'three';
 import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
 import WEBGL from "three/examples/jsm/capabilities/WebGL";
-import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
+import {OBJLoader} from 'three/examples/jsm/loaders/OBJLoader';
 
-const DragonKettle = () => {
 
+const TestBox = () => {
+
+    let renderer = new THREE.WebGLRenderer({antialias: true});
+    let loader;
     let scene = new THREE.Scene();
-    let light;
     let camera: any;
-    let loader;       // OBJLoader 객체를 넣을 변수를 선언.
+    let light;
     let controls: any;
-    let renderer = new THREE.WebGLRenderer({ antialias: true });
 
     useEffect(() => {
         initThree();
         addDirectionLight();
         loadObjLoader();
-    }, [])
+    })
 
     const initThree = () => {
         if (WEBGL.isWebGLAvailable()) {
@@ -28,15 +29,10 @@ const DragonKettle = () => {
 
         camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
 
-        // antialias:  true = 컴퓨터 그래픽에서 해상도의 한계로 선 등이 우둘투둘하지 않게
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.shadowMap.enabled = true;
         renderer.shadowMap.type = THREE.PCFShadowMap;
         document.body.appendChild(renderer.domElement);
-
-        // x, y, z 축에 선을 그려줌
-        // let axes = new THREE.AxesHelper(10);
-        // scene.add(axes);
 
         camera.position.x = 2;
         camera.position.y = 1;
@@ -70,32 +66,36 @@ const DragonKettle = () => {
 
     const loadObjLoader = () => {
         loader = new OBJLoader();
+        let textures = [] as Array<any>;
         const textureLoader = new THREE.TextureLoader();
-        const material = new THREE.MeshLambertMaterial({ map: textureLoader.load(`${process.env.PUBLIC_URL}/NT_NO061/Textures/T_NT_NO061_AO.png`) });
-        const material2 = new THREE.MeshLambertMaterial({ map: textureLoader.load(`${process.env.PUBLIC_URL}/NT_NO061/Textures/T_NT_NO061_D.png`) });
-        const material3 = new THREE.MeshLambertMaterial({ map: textureLoader.load(`${process.env.PUBLIC_URL}/NT_NO061/Textures/T_NT_NO061_M.png`) });
-        const material4 = new THREE.MeshLambertMaterial({ map: textureLoader.load(`${process.env.PUBLIC_URL}/NT_NO061/Textures/T_NT_NO061_N.png`) });
-        const material5 = new THREE.MeshLambertMaterial({ map: textureLoader.load(`${process.env.PUBLIC_URL}/NT_NO061/Textures/T_NT_NO061_R.png`) });
 
-        loader.load(`${process.env.PUBLIC_URL}/NT_NO061/NT_NO061.obj`, (obj: any) => {
-            // version 1.0
-            // const texture = new THREE.TextureLoader().load(`${process.env.PUBLIC_URL}/NT_NO061/Textures/T_NT_NO061_AO.png`);
-            // obj.traverse(child => {
-            //     if (child instanceof THREE.Mesh) {
-            //         child.material.map = texture;
-            //     }
-            // })
+        loader.load(`${process.env.PUBLIC_URL}/NT_NO061/NT_NO061.obj`, (object: any) => {
 
-            // version 1.1
-            const geometry = obj.children[0].geometry;
-            const materials = [material, material2, material3, material4, material5];
-            geometry.addGroup(0, geometry.getAttribute('position').count / 2, 0);
-            geometry.addGroup(geometry.getAttribute("position").count / 2,
-              geometry.getAttribute("position").count / 2,1);
-            obj = new THREE.Mesh(geometry, materials);
-            obj.position.y = 0;
+            textures = [
+              textureLoader.load(`${process.env.PUBLIC_URL}/NT_NO061/Textures/T_NT_NO061_AO.png`),
+              textureLoader.load(`${process.env.PUBLIC_URL}/NT_NO061/Textures/T_NT_NO061_D .png`),
+              textureLoader.load(`${process.env.PUBLIC_URL}/NT_NO061/Textures/T_NT_NO061_N.png`),
+              textureLoader.load(`${process.env.PUBLIC_URL}/NT_NO061/Textures/T_NT_NO061_M .png`),
+              textureLoader.load(`${process.env.PUBLIC_URL}/NT_NO061/Textures/T_NT_NO061_R.png`)
+            ]
 
-            scene.add(obj);
+            const geometry = object.children[0].geometry;
+            {/*
+                aoMap => ..._AO.png
+                map =>  ..._D.png
+                normalMap => ..._N.png
+                roughnessMap => ..._R.png
+                roughness: 0 ~ 1 조절
+            */}
+            const material = new THREE.MeshStandardMaterial({
+                aoMap: textures[0],
+                map: textures[1],
+                normalMap: textures[2],
+                roughnessMap: textures[4],
+                roughness: 0.8
+            })
+            object = new THREE.Mesh(geometry, material)
+            scene.add(object);
 
             // 바닥 정의
             const planSize = 40;
@@ -128,4 +128,4 @@ const DragonKettle = () => {
     );
 }
 
-export default DragonKettle;
+export default TestBox;
