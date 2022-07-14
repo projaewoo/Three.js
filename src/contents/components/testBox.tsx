@@ -13,6 +13,7 @@ const TestBox = () => {
     let loader;
     let scene = new THREE.Scene();
     let camera: any;
+    let cameraOrtho;
     let light;
     let controls: any;
 
@@ -39,6 +40,16 @@ const TestBox = () => {
         camera.position.y = 1;
         camera.position.z = 1;
 
+        const cameraOrthoInfo = {
+            left: -3.2,
+            right: 3.2,
+            top: 2.4,
+            bottom: -2.4,
+            near: 0.01,
+            far: 100
+        }
+        cameraOrtho = new THREE.OrthographicCamera(cameraOrthoInfo.left, cameraOrthoInfo.right, cameraOrthoInfo.top, cameraOrthoInfo.bottom, cameraOrthoInfo.near, cameraOrthoInfo.far);
+
         controls = new OrbitControls(camera, renderer.domElement as HTMLCanvasElement);
         controls.rotateSpeed = 1.0;
         controls.zoomSpeed = 1.2;
@@ -49,7 +60,16 @@ const TestBox = () => {
         const animate = () => {
             requestAnimationFrame(animate);
 
+            renderer.autoClear = false;
+            renderer.setViewport(0, 0, window.innerWidth, window.innerHeight);
             renderer.render(scene, camera);
+
+            cameraOrtho.position.copy(camera.position);
+            cameraOrtho.updateProjectionMatrix();
+            cameraOrtho.lookAt(scene.position);
+            renderer.setViewport(10, 700, 200, 200);
+            renderer.render(scene, cameraOrtho)
+
             controls.update();
         }
 
