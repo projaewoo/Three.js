@@ -6,7 +6,6 @@ import {OBJLoader} from 'three/examples/jsm/loaders/OBJLoader';
 import {Mesh} from "three";
 import {getGround} from "src/utils/getGround";
 
-
 const TestBox = () => {
 
     let renderer = new THREE.WebGLRenderer({antialias: true});
@@ -16,6 +15,7 @@ const TestBox = () => {
     let cameraOrtho;
     let light;
     let controls: any;
+    let controlsOrtho: any;
 
     useEffect(() => {
         initThree();
@@ -43,19 +43,22 @@ const TestBox = () => {
         const cameraOrthoInfo = {
             left: -3.2,
             right: 3.2,
-            top: 2.4,
+            top: 5.4,
             bottom: -2.4,
             near: 0.01,
             far: 100
         }
+
         cameraOrtho = new THREE.OrthographicCamera(cameraOrthoInfo.left, cameraOrthoInfo.right, cameraOrthoInfo.top, cameraOrthoInfo.bottom, cameraOrthoInfo.near, cameraOrthoInfo.far);
 
         controls = new OrbitControls(camera, renderer.domElement as HTMLCanvasElement);
-        controls.rotateSpeed = 1.0;
-        controls.zoomSpeed = 1.2;
-        controls.panSpeed = 0.8;
-        controls.minDistance = 5;
-        controls.maxDistance = 20;
+        controlsOrtho = new OrbitControls(cameraOrtho, renderer.domElement as HTMLCanvasElement);
+
+        controls.rotateSpeed = controlsOrtho.rotateSpeed = 1.0;
+        controls.zoomSpeed = controlsOrtho.zoomSpeed =1.2;
+        controls.panSpeed = controlsOrtho.panSpeed = 0.8;
+        controls.minDistance = controlsOrtho.minDistance = 5;
+        controls.maxDistance = controlsOrtho.maxDistance = 20;
 
         const animate = () => {
             requestAnimationFrame(animate);
@@ -67,21 +70,21 @@ const TestBox = () => {
             cameraOrtho.position.copy(camera.position);
             cameraOrtho.updateProjectionMatrix();
             cameraOrtho.lookAt(scene.position);
-            renderer.setViewport(10, 700, 200, 200);
+            renderer.setViewport(10, window.innerHeight - 210, 200, 200);
             renderer.render(scene, cameraOrtho)
 
             controls.update();
+            controlsOrtho.update();
         }
 
         animate();
     }
 
     const addDirectionLight = () => {
-        light = new THREE.DirectionalLight(0xffffff, 1);
-        light.position.x = 1;
-        light.position.y = 1;
-        light.position.z = 1;
-        scene.add(light);
+        light = new THREE.PointLight(0xffffff);
+        light.position.set(1, 1, 1);            // (x, y, z)
+        camera.add(light);                      // camera 돌릴 때마다, point light 비춰짐
+        scene.add(camera);
     }
 
     const loadObjLoader = () => {
