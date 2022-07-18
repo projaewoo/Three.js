@@ -1,10 +1,10 @@
 import React from 'react';
-import TestBox from "./contents/components/testBox";
+import D3miniMap from "./contents/components/d3miniMap";
 
 function App() {
   return (
     <div>
-        <TestBox/>
+        <D3miniMap/>
     </div>
   );
 }

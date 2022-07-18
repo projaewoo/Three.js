@@ -16,6 +16,8 @@ const TestBox = () => {
     let light;
     let controls: any;
     let controlsOrtho: any;
+    let mapCamera;
+    let mapComposer;
 
     useEffect(() => {
         initThree();
@@ -50,12 +52,20 @@ const TestBox = () => {
         }
 
         cameraOrtho = new THREE.OrthographicCamera(cameraOrthoInfo.left, cameraOrthoInfo.right, cameraOrthoInfo.top, cameraOrthoInfo.bottom, cameraOrthoInfo.near, cameraOrthoInfo.far);
+        {/*
+            left: 카메라 절두체의 왼쪽,
+            right: 카메라 절두체의 오른쪽,
+            top: 카메라 절두체의 위쪽
+            bottom: 카메라 절두체의 아래쪽 평면
+            near: 카메라 절두체의 가까운 쪽
+            far: 카메라 절두체의 먼 쪽 평면
+        */}
 
         controls = new OrbitControls(camera, renderer.domElement as HTMLCanvasElement);
         controlsOrtho = new OrbitControls(cameraOrtho, renderer.domElement as HTMLCanvasElement);
 
         controls.rotateSpeed = controlsOrtho.rotateSpeed = 1.0;
-        controls.zoomSpeed = controlsOrtho.zoomSpeed =1.2;
+        controls.zoomSpeed = controlsOrtho.zoomSpeed = 1.2;
         controls.panSpeed = controlsOrtho.panSpeed = 0.8;
         controls.minDistance = controlsOrtho.minDistance = 5;
         controls.maxDistance = controlsOrtho.maxDistance = 20;
@@ -67,6 +77,7 @@ const TestBox = () => {
             renderer.setViewport(0, 0, window.innerWidth, window.innerHeight);
             renderer.render(scene, camera);
 
+            // minimap (camera로 minimap 만들기)
             cameraOrtho.position.copy(camera.position);
             cameraOrtho.updateProjectionMatrix();
             cameraOrtho.lookAt(scene.position);
