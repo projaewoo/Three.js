@@ -1,10 +1,10 @@
 import React from 'react';
-import D3miniMap from "./contents/components/d3miniMap";
+import ReactThreeFiber from "./contents/components/reactThreeFiber/reactThreeFiber";
 
 function App() {
   return (
     <div>
-        <D3miniMap/>
+        <ReactThreeFiber/>
     </div>
   );
 }
