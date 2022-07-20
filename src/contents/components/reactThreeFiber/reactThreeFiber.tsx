@@ -29,11 +29,24 @@ const ReactThreeFiber = () => {
     ])
     const scene = useLoader(OBJLoader, `${process.env.PUBLIC_URL}/NT_NO061/NT_NO061.obj`);
     const {nodes, materials} = useGraph(scene);
-    materials[Object.keys(materials)[0]].displacementMap = roughnessMap;
-    materials[Object.keys(materials)[0]].displacementScale = 0.1;
-    materials[Object.keys(materials)[0]].map = map;
-    materials[Object.keys(materials)[0]].normalMap = normalMap;
-    materials[Object.keys(materials)[0]].aoMap = aoMap;
+    const object3d = nodes[Object.keys(nodes)[0]];
+    const material = materials[Object.keys(materials)[0]];
+
+    material.displacementMap = roughnessMap;
+    material.displacementScale = 0.1;
+    material.map = map;
+    material.normalMap = normalMap;
+    material.aoMap = aoMap;
+
+    const playVideo = () => {
+        cameraControls.current?.moveTo(0, 0, 0, true);
+        setTimeout(() => {
+            cameraControls.current?.rotate(Math.PI, 0, true)
+        }, 1000)
+        setTimeout(() => {
+            cameraControls.current?.rotate(Math.PI, 0, true)
+        }, 2000)
+    }
 
     return (
       <Wrapper>
@@ -41,7 +54,7 @@ const ReactThreeFiber = () => {
             camera={{position: [3, 3, 3]}}
             onCreated={state => state.gl.setClearColor('black')}
           >
-              <CameraControls ref={cameraControls}/>
+              <CameraControls ref={cameraControls} />
               <OrbitControls/>
               <pointLight
                 color={'white'}
@@ -50,8 +63,8 @@ const ReactThreeFiber = () => {
               />
               <mesh
                 position={[0, -2, 0]}
-                geometry={nodes[Object.keys(nodes)[0]].geometry}
-                material={materials[Object.keys(materials)[0]]}
+                geometry={object3d.geometry}
+                material={material}
               />
           </Canvas>
           <div style={{ position: 'absolute', top: '0' }}>
@@ -61,8 +74,8 @@ const ReactThreeFiber = () => {
               <button type={'button'} onClick={() => cameraControls.current?.reset(true)}>
                   reset
               </button>
-              <button type={'button'} onClick={() => cameraControls.current?.fitToBox(nodes[Object.keys(nodes)[0]].geometry, true)}>
-                  fitToBox
+              <button type={'button'} onClick={playVideo}>
+                  play video
               </button>
           </div>
       </Wrapper>
