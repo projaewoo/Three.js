@@ -48,8 +48,10 @@ export const CameraControls = forwardRef<CameraControlsDefault, unknown>((_, ref
     const cameraControls = useRef<CameraControlsDefault | null>(null);
     const camera = useThree((state) => state.camera);
     const renderer = useThree((state) => state.gl);
+
     useFrame((_, delta) => cameraControls.current?.update(delta));
     useEffect(() => () => cameraControls.current?.dispose(), []);
+
     return (
       <cameraControlsDefault
         ref={mergeRefs<CameraControlsDefault>(cameraControls, ref)}
@@ -58,7 +60,7 @@ export const CameraControls = forwardRef<CameraControlsDefault, unknown>((_, ref
     );
 });
 
-export type CameraControls = CameraControlsDefault;
+export type CameraControlsType = CameraControlsDefault;
 
 function mergeRefs<T>(...refs: (MutableRefObject<T> | ForwardedRef<T>)[]) {
     return (instance: T): void => {

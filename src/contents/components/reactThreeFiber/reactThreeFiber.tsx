@@ -4,7 +4,7 @@ import {Canvas, useGraph, useLoader} from "@react-three/fiber";
 import {OrbitControls} from "@react-three/drei";
 import styled from "styled-components";
 import {OBJLoader} from 'three/examples/jsm/loaders/OBJLoader'
-import {CameraControls} from "./cameraControls";
+import {CameraControls, CameraControlsType} from "./cameraControls";
 
 {/*
     TODO.
@@ -20,7 +20,7 @@ const Wrapper = styled.div`
 `
 
 const ReactThreeFiber = () => {
-    const cameraControls = useRef<CameraControls | null>(null);
+    const cameraControls = useRef<CameraControlsType | null>(null);
     const [aoMap, map, normalMap, roughnessMap] = useLoader(THREE.TextureLoader, [
         `${process.env.PUBLIC_URL}/NT_NO061/Textures/T_NT_NO061_AO.png`,
         `${process.env.PUBLIC_URL}/NT_NO061/Textures/T_NT_NO061_D.png`,
@@ -56,10 +56,13 @@ const ReactThreeFiber = () => {
           </Canvas>
           <div style={{ position: 'absolute', top: '0' }}>
               <button type={'button'} onClick={() => cameraControls.current?.rotate(Math.PI / 4, 0, true)}>
-                  rotage theta 45deg
+                  rotate theta 45deg
               </button>
               <button type={'button'} onClick={() => cameraControls.current?.reset(true)}>
                   reset
+              </button>
+              <button type={'button'} onClick={() => cameraControls.current?.fitToBox(nodes[Object.keys(nodes)[0]].geometry, true)}>
+                  fitToBox
               </button>
           </div>
       </Wrapper>
