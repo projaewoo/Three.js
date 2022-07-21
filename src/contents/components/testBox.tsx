@@ -59,7 +59,8 @@ const TestBox = () => {
             bottom: 카메라 절두체의 아래쪽 평면
             near: 카메라 절두체의 가까운 쪽
             far: 카메라 절두체의 먼 쪽 평면
-        */}
+        */
+        }
 
         controls = new OrbitControls(camera, renderer.domElement as HTMLCanvasElement);
         controlsOrtho = new OrbitControls(cameraOrtho, renderer.domElement as HTMLCanvasElement);
@@ -105,11 +106,11 @@ const TestBox = () => {
 
         loader.load(`${process.env.PUBLIC_URL}/NT_NO061/NT_NO061.obj`, (object: any) => {
             textures = [
-              textureLoader.load(`${process.env.PUBLIC_URL}/NT_NO061/Textures/T_NT_NO061_AO.png`),
-              textureLoader.load(`${process.env.PUBLIC_URL}/NT_NO061/Textures/T_NT_NO061_D.png`),
-              textureLoader.load(`${process.env.PUBLIC_URL}/NT_NO061/Textures/T_NT_NO061_N.png`),
-              textureLoader.load(`${process.env.PUBLIC_URL}/NT_NO061/Textures/T_NT_NO061_M.png`),
-              textureLoader.load(`${process.env.PUBLIC_URL}/NT_NO061/Textures/T_NT_NO061_R.png`)
+                textureLoader.load(`${process.env.PUBLIC_URL}/NT_NO061/Textures/T_NT_NO061_AO.png`),
+                textureLoader.load(`${process.env.PUBLIC_URL}/NT_NO061/Textures/T_NT_NO061_D.png`),
+                textureLoader.load(`${process.env.PUBLIC_URL}/NT_NO061/Textures/T_NT_NO061_N.png`),
+                textureLoader.load(`${process.env.PUBLIC_URL}/NT_NO061/Textures/T_NT_NO061_M.png`),
+                textureLoader.load(`${process.env.PUBLIC_URL}/NT_NO061/Textures/T_NT_NO061_R.png`)
             ]
 
             const geometry = object.children[0].geometry;
@@ -119,10 +120,12 @@ const TestBox = () => {
                 normalMap => ..._N.png
                 roughnessMap => ..._R.png
                 roughness: 0 ~ 1 조절
-            */}
+            */
+            }
             {/* light = new THREE.DirectionLight와 같이 직접적으로 light를 줘야
                     aoMap, normalMap, roughnessMap이 적용됌
-             */}
+             */
+            }
             const material = new THREE.MeshStandardMaterial({
                 aoMap: textures[0],
                 map: textures[1],
@@ -134,7 +137,7 @@ const TestBox = () => {
             scene.add(object);
 
             // 바닥 추가
-            scene.add(getGround() as Mesh);
+            // scene.add(getGround() as Mesh);
         }, xhr => {
             console.log(`${Math.ceil(xhr.loaded / xhr.total * 100)}% loaded`);
         }, error => {
@@ -142,8 +145,16 @@ const TestBox = () => {
         })
     }
 
+    const click = () => {
+        controls.reset();
+    }
+
     return (
-      <></>
+      <>
+          <div style={{ position: 'absolute', top: '0' }}>
+            <button type={'button'} onClick={click}>test</button>
+          </div>
+      </>
     );
 }
 
