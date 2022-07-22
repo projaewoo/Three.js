@@ -26,19 +26,21 @@ const ReactThreeFiber = () => {
         `${process.env.PUBLIC_URL}/NT_NO061/Textures/T_NT_NO061_D.png`,
         `${process.env.PUBLIC_URL}/NT_NO061/Textures/T_NT_NO061_N.png`,
         `${process.env.PUBLIC_URL}/NT_NO061/Textures/T_NT_NO061_R.png`,
-        `${process.env.PUBLIC_URL}/NT_NO061/Textures/T_NT_NO061_M.png`
     ])
+
     const scene = useLoader(OBJLoader, `${process.env.PUBLIC_URL}/NT_NO061/NT_NO061.obj`);
     const {nodes} = useGraph(scene);
-    
     const { geometry } = nodes[Object.keys(nodes)[0]];
-    const newMaterials = new THREE.MeshStandardMaterial({
+    const material = new THREE.MeshStandardMaterial({
         aoMap,
         map,
         normalMap,
         roughnessMap,
-        roughness: 0.8
+        roughness: 0.5,
+        metalness: 0.6           // 좀 더 메탈스럽게 (색을 더 선명하게)
     })
+    
+    console.log('material', material)
 
     const playVideo = () => {
         cameraControls.current?.reset(true);
@@ -66,7 +68,7 @@ const ReactThreeFiber = () => {
               <mesh
                 position={[0, -2, 0]}
                 geometry={geometry}
-                material={newMaterials}
+                material={material}
               />
           </Canvas>
           <div style={{ position: 'absolute', top: '0' }}>
