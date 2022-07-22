@@ -5,13 +5,12 @@ import {OrbitControls} from "@react-three/drei";
 import styled from "styled-components";
 import {OBJLoader} from 'three/examples/jsm/loaders/OBJLoader'
 import {CameraControls, CameraControlsType} from "./cameraControls";
+import LightController from "./lightController";
 
 {/*
     TODO.
         1. loading progress
             https://docs.pmnd.rs/react-three-fiber/API/hooks#use-graph
-        2. material의 pixel이 깨지지 않게
-            react three fiber materials map 등으로 검색
 */
 }
 
@@ -27,7 +26,6 @@ const ReactThreeFiber = () => {
         `${process.env.PUBLIC_URL}/NT_NO061/Textures/T_NT_NO061_N.png`,
         `${process.env.PUBLIC_URL}/NT_NO061/Textures/T_NT_NO061_R.png`,
     ])
-
     const scene = useLoader(OBJLoader, `${process.env.PUBLIC_URL}/NT_NO061/NT_NO061.obj`);
     const {nodes} = useGraph(scene);
     const { geometry } = nodes[Object.keys(nodes)[0]];
@@ -37,11 +35,9 @@ const ReactThreeFiber = () => {
         normalMap,
         roughnessMap,
         roughness: 0.5,
-        metalness: 0.6           // 좀 더 메탈스럽게 (색을 더 선명하게)
+        metalness: 0.80           // 좀 더 메탈스럽게 (색을 더 선명하게)
     })
     
-    console.log('material', material)
-
     const playVideo = () => {
         cameraControls.current?.reset(true);
         setTimeout(() => {
@@ -59,12 +55,8 @@ const ReactThreeFiber = () => {
             onCreated={state => state.gl.setClearColor('black')}
           >
               <CameraControls ref={cameraControls} />
+              <LightController/>
               <OrbitControls/>
-              <pointLight
-                color={'white'}
-                intensisty={1}
-                position={[10, 10, 10]}
-              />
               <mesh
                 position={[0, -2, 0]}
                 geometry={geometry}
