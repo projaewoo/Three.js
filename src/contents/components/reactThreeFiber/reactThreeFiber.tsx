@@ -1,7 +1,7 @@
-import React, {useRef} from 'react';
+import React, {useMemo, useRef, useState} from 'react';
 import * as THREE from 'three';
-import {Canvas, useFrame, useGraph, useLoader} from "@react-three/fiber";
-import {OrbitControls} from "@react-three/drei";
+import {Canvas, useFrame, useGraph, useLoader, useThree, createPortal} from "@react-three/fiber";
+import {OrbitControls, OrthographicCamera, useCamera} from "@react-three/drei";
 import styled from "styled-components";
 import {OBJLoader} from 'three/examples/jsm/loaders/OBJLoader'
 import {CameraControls, CameraControlsType} from "./cameraControls";
@@ -39,14 +39,14 @@ const ReactThreeFiber = () => {
         roughness: 0.5,
         metalness: 0.80           // 좀 더 메탈스럽게 (색을 더 선명하게)
     })
-    
+
     const [startVideo, setStartVideo] = React.useState<boolean>(false);
     const [type, setType] = React.useState<moveType>('leftToRight')
 
     let startPoint = 3
+    const lookAtPos = new THREE.Vector3()
 
-    function Thing() {
-        const lookAtPos = new THREE.Vector3()
+    const Video = () => {
         let height = 0.5;
 
         useFrame(state => {
@@ -102,11 +102,49 @@ const ReactThreeFiber = () => {
         )
     }
 
+    const Viewcube = (): any => {
+        const { gl, scene, camera, size } = useThree()
+        const virtualScene = useMemo(() => new THREE.Scene(), [])
+        const virtualCam = useRef()
+        const ref = useRef(null)
+        const [hover, set] = useState(null)
+        const matrix = new THREE.Matrix4()
+
+        useFrame(() => {
+            matrix.copy(camera.matrix).invert()
+            ref.current.quaternion.setFromRotationMatrix(matrix)
+            gl.autoClear = true
+            gl.render(scene, camera)
+            gl.autoClear = false
+            gl.clearDepth()
+            gl.render(virtualScene, virtualCam.current)
+        }, 1)
+
+        return createPortal(
+          <>
+              {/*@ts-ignore*/}
+              <OrthographicCamera ref={virtualCam} makeDefault={false} position={[0, 0, 100]}/>
+              {/*<OrthographicCamera ref={virtualCam} makeDefault={false} position={[0, 0, 100]}/>*/}
+              <mesh
+                ref={ref}
+                raycast={useCamera(virtualCam)}
+                position={[size.width / 2 - 80, size.height / 2 - 80, 0]}
+                onPointerOut={() => set(null)}
+                onPointerMove={(e: any) => set(Math.floor(e.faceIndex / 2))}
+                geometry={geometry}
+                material={material}
+              />
+              <ambientLight intensity={0.5} />
+              <pointLight position={[10, 10, 10]} intensity={0.5} />
+          </>,
+          virtualScene
+        )
+    }
 
     return (
       <Wrapper>
           <Canvas
-            camera={{position: [3, 3, 3]}}
+            camera={{position: [3, 3, 3]}}         // fov: 보여주는 높이?? (object height에 맞게 유동적으로 변환)
             onCreated={state => state.gl.setClearColor('black')}
           >
               <CameraControls ref={cameraControls} />
@@ -118,7 +156,8 @@ const ReactThreeFiber = () => {
                 geometry={geometry}
                 material={material}
               />
-              {startVideo && <Thing/>}
+              <Viewcube />
+              {startVideo && <Video/>}
           </Canvas>
           <div style={{ position: 'absolute', top: '0' }}>
               <button type={'button'} onClick={() => cameraControls.current?.rotate(Math.PI / 4, 0, true)}>
