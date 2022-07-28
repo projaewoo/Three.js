@@ -14,7 +14,12 @@ import LightController from "./lightController";
 */
 }
 
-type moveType = 'rightToLeft' | 'leftToRight' | 'bottomToTop' | 'topToBottom' | 'rotation'
+type moveType = 'rightToLeft' | 'leftToRight' | 'bottomToTop' | 'topToBottom' | 'rotation';
+
+type flag = {
+    video: boolean,
+    minimap: boolean
+}
 
 const Wrapper = styled.div`
     height: 100vh
@@ -30,7 +35,7 @@ const ReactThreeFiber = () => {
     ])
     const scene = useLoader(OBJLoader, `${process.env.PUBLIC_URL}/NT_NO061/NT_NO061.obj`);
     const {nodes} = useGraph(scene);
-    const { geometry } = nodes[Object.keys(nodes)[0]];
+    const {geometry} = nodes[Object.keys(nodes)[0]];
     const material = new THREE.MeshStandardMaterial({
         aoMap,
         map,
@@ -40,8 +45,8 @@ const ReactThreeFiber = () => {
         metalness: 0.80           // 좀 더 메탈스럽게 (색을 더 선명하게)
     })
 
-    const [startVideo, setStartVideo] = React.useState<boolean>(false);
-    const [type, setType] = React.useState<moveType>('leftToRight')
+    const [flag, setFlag] = useState<flag>({video: false, minimap: true});
+    const [type, setType] = useState<moveType>('leftToRight')
 
     let startPoint = 3
     const lookAtPos = new THREE.Vector3()
@@ -93,7 +98,8 @@ const ReactThreeFiber = () => {
                     state.camera.updateProjectionMatrix()
                     break;
                 }
-                default: return null;
+                default:
+                    return null;
             }
         })
 
@@ -102,12 +108,11 @@ const ReactThreeFiber = () => {
         )
     }
 
-    const Viewcube = (): any => {
-        const { gl, scene, camera, size } = useThree()
+    const Minimap = (): any => {
+        const {gl, scene, camera, size} = useThree()
         const virtualScene = useMemo(() => new THREE.Scene(), [])
         const virtualCam = useRef()
         const ref = useRef(null)
-        const [hover, set] = useState(null)
         const matrix = new THREE.Matrix4()
 
         useFrame(() => {
@@ -120,34 +125,55 @@ const ReactThreeFiber = () => {
             gl.render(virtualScene, virtualCam.current)
         }, 1)
 
+        {/* TODO. minimap 안의 mesh의 metalness를 조정 */}
         return createPortal(
           <>
               {/*@ts-ignore*/}
-              <OrthographicCamera ref={virtualCam} makeDefault={false} position={[0, 0, 100]}/>
+              <OrthographicCamera ref={virtualCam} makeDefault={false} position={[0, 0, 300]}/>
               {/*<OrthographicCamera ref={virtualCam} makeDefault={false} position={[0, 0, 100]}/>*/}
+              <ambientLight/>
               <mesh
+                scale={50}
                 ref={ref}
                 raycast={useCamera(virtualCam)}
-                position={[size.width / 2 - 80, size.height / 2 - 80, 0]}
-                onPointerOut={() => set(null)}
-                onPointerMove={(e: any) => set(Math.floor(e.faceIndex / 2))}
+                position={[size.width / 2 - 170, size.height / 2 - 250, 0]}         // 3d object 높이에 따라 변경
+                // position={[size.width / 2 - 80, size.height / 2 - 80, 0]}
                 geometry={geometry}
                 material={material}
               />
-              <ambientLight intensity={0.5} />
-              <pointLight position={[10, 10, 10]} intensity={0.5} />
+              <mesh position={[size.width / 2 - 170, size.height / 2 - 170, 0]}>
+                  <boxGeometry args={[100, 100, 100]}/>
+                  <meshStandardMaterial color={0xffffff} wireframe/>
+              </mesh>
+              <ambientLight intensity={0.5}/>
+              <pointLight position={[10, 10, 10]} intensity={0.5}/>
           </>,
           virtualScene
         )
+    }
+
+    const rotate = () => {
+        cameraControls.current.rotate(Math.PI / 4, 0, true)
+    }
+
+    const reset = () => {
+        cameraControls.current.reset(true);
+        setFlag({video: false, minimap: true});
+        setType('leftToRight')
+    }
+
+    const startVideo = () => {
+        cameraControls.current.reset(true);
+        setFlag({video: true, minimap: false});
     }
 
     return (
       <Wrapper>
           <Canvas
             camera={{position: [3, 3, 3]}}         // fov: 보여주는 높이?? (object height에 맞게 유동적으로 변환)
-            onCreated={state => state.gl.setClearColor('black')}
+            onCreated={({ scene }) => scene.background = new THREE.Color('#000')}
           >
-              <CameraControls ref={cameraControls} />
+              <CameraControls ref={cameraControls}/>
               <LightController/>
               <OrbitControls/>
               <axesHelper args={[5, 5, 5]}/>
@@ -156,24 +182,17 @@ const ReactThreeFiber = () => {
                 geometry={geometry}
                 material={material}
               />
-              <Viewcube />
-              {startVideo && <Video/>}
+              {flag.minimap && <Minimap/>}
+              {flag.video && <Video/>}
           </Canvas>
-          <div style={{ position: 'absolute', top: '0' }}>
-              <button type={'button'} onClick={() => cameraControls.current?.rotate(Math.PI / 4, 0, true)}>
+          <div style={{position: 'absolute', top: '0'}}>
+              <button type={'button'} onClick={rotate}>
                   rotate theta 45deg
               </button>
-              <button
-                type={'button'}
-                onClick={() => {
-                    cameraControls.current?.reset(true);
-                    setStartVideo(false);
-                    setType('leftToRight')
-                }}
-              >
+              <button type={'button'} onClick={reset}>
                   reset
               </button>
-              <button type={'button'} onClick={() => setStartVideo(true)}>
+              <button type={'button'} onClick={startVideo}>
                   start video
               </button>
           </div>
