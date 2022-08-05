@@ -17,13 +17,19 @@ const OpenSeaDragonViewer = ({ image }) => {
           OpenSeaDragon({
               id: "openSeaDragon",
               prefixUrl: "openseadragon-images/",
-              animationTime: 0.5,
+              tileSources: {
+                  type: 'image',
+                  url: `${process.env.PUBLIC_URL}/sample/sampleImage.jpg`,
+                  success: () => console.log('success')
+              },
+              animationTime: .5,
               blendTime: 0.1,
               constrainDuringPan: true,
               maxZoomPixelRatio: 2,
               minZoomLevel: 1,
               visibilityRatio: 1,
-              zoomPerScroll: 2
+              zoomPerScroll: 2,
+              showNavigator: true
           })
         );
     };
