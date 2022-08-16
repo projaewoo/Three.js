@@ -176,25 +176,25 @@ const ReactThreeFiber = () => {
               <CameraControls ref={cameraControls}/>
               <LightController/>
               <OrbitControls/>
-              <axesHelper args={[5, 5, 5]}/>
+              {/*<axesHelper args={[5, 5, 5]}/>*/}
               <mesh
                 position={[0, -2, 0]}
                 geometry={geometry}
                 material={material}
               />
-              {flag.minimap && <Minimap/>}
-              {flag.video && <Video/>}
+              {/*{flag.minimap && <Minimap/>}*/}
+              {/*{flag.video && <Video/>}*/}
           </Canvas>
           <div style={{position: 'absolute', top: '0'}}>
-              <button type={'button'} onClick={rotate}>
-                  rotate theta 45deg
-              </button>
-              <button type={'button'} onClick={reset}>
-                  reset
-              </button>
-              <button type={'button'} onClick={startVideo}>
-                  start video
-              </button>
+              {/*<button type={'button'} onClick={rotate}>*/}
+              {/*    rotate theta 45deg*/}
+              {/*</button>*/}
+              {/*<button type={'button'} onClick={reset}>*/}
+              {/*    reset*/}
+              {/*</button>*/}
+              {/*<button type={'button'} onClick={startVideo}>*/}
+              {/*    start video*/}
+              {/*</button>*/}
           </div>
       </Wrapper>
     );
